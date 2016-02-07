@@ -21,6 +21,7 @@
 #include <codec_error.h>
 #include <codec.h>
 #include "codec_h_ctrl.h"
+#include <unistd.h>
 
 //------------------------------
 #include <sys/times.h>
@@ -121,7 +122,7 @@ int codec_h_control(CODEC_HANDLE h, int cmd, unsigned long paramter)
     }
     r = ioctl(h, cmd, paramter);
     if (r < 0) {
-        CODEC_PRINT("send control failed,handle=%d,cmd=%x,paramter=%x, t=%x errno=%d\n", h, cmd, paramter, r, errno);
+        CODEC_PRINT("send control failed,handle=%d,cmd=%x,paramter=%lx, t=%x errno=%d\n", h, cmd, paramter, r, errno);
         return r;
     }
     return 0;

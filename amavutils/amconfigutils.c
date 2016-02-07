@@ -5,6 +5,8 @@ changed to HASH and list for fast get,set...
 */
 #include "include/amconfigutils.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
 static char *amconfigs[MAX_CONFIG] = {0};
 static int    amconfig_inited = 0;

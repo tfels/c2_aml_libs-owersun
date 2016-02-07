@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <unistd.h>
+#include <stdio.h>
 #define LOG_TAG "ammodule"
 #ifdef ANDROID
 #include <utils/Log.h>

@@ -77,7 +77,7 @@ typedef enum {
 								 ||(afmt == AFORMAT_AMR)\
 								 ||(afmt == AFORMAT_ALAC)\
 								 ||(afmt == AFORMAT_AC3) \
-								 ||(afmt == AFORMAT_EAC3) \								 
+								 ||(afmt == AFORMAT_EAC3) \
 								 ||(afmt == AFORMAT_APE) \
 								 ||(afmt == AFORMAT_FLAC)\
 								 ||(afmt == AFORMAT_PCM_WIFIDISPLAY) \

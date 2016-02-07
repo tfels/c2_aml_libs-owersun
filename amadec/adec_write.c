@@ -1,4 +1,5 @@
 #include <adec_write.h>
+#include <adec-macros.h>
 
 int init_buff(buffer_stream_t *bs,int length)
 {
@@ -79,7 +80,7 @@ static int read_data(char * out, buffer_stream_t *bs, int size)
 		//printf("=====buffer empty \n");
 		return 0;//buffer empty
 	}
-	int len= MIN(bs->buf_level,size);
+	int len = MIN(bs->buf_level,size);
 	if(bs->wr_ptr>bs->rd_ptr)
 	{
 		memcpy(out,bs->rd_ptr,len);

@@ -2,6 +2,8 @@
 #define LOG_TAG "amavutils"
 
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <strings.h>

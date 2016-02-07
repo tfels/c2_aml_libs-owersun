@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
 
 #include <audio-dec.h>
 #include <adec-pts-mgt.h>

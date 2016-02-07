@@ -13,6 +13,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include <adec-pts-mgt.h>
 #include <cutils/properties.h>

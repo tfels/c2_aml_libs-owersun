@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <pthread.h>
 #include <sys/ioctl.h>
@@ -242,7 +243,7 @@ unsigned long  armdec_get_pts(dsp_operations_t *dsp_ops)
         if(audec->g_bst->format != ACODEC_FMT_COOK && audec->g_bst->format != ACODEC_FMT_RAAC)
             ioctl(dsp_ops->dsp_file_fd,AMSTREAM_IOC_APTS_LOOKUP,&offset);
     }else{
-        adec_print("====abuf have not open!\n",val);
+        adec_print("====abuf have not open!\n");
     }
     if(am_getconfig_bool("media.arm.audio.apts_add"))
        offset=0;
@@ -666,7 +667,7 @@ static void start_adec(aml_audio_dec_t *audec)
                  amsysfs_get_sysfs_str(TSYNC_VPTS, buf, sizeof(buf));// read vpts
                  if (sscanf(buf, "0x%lx", &vpts) < 1) {
                     adec_print("unable to get vpts from: %s", buf);
-                    return -1;
+                    return;
                  }
                  // save vpts to apts
                  adec_print("## can't get first apts, save vpts to apts,vpts=%lx, \n",vpts);
@@ -808,7 +809,7 @@ static void start_decode_thread(aml_audio_dec_t *audec)
 {
     if(audec->state != INITTED){
         adec_print("decode not inited quit \n");
-        return -1;
+        return;
     }
 
     pthread_t    tid;
@@ -819,7 +820,7 @@ static void start_decode_thread(aml_audio_dec_t *audec)
     ret = pthread_create(&tid, NULL, (void *)audio_decode_loop, (void *)audec);
     if (ret != 0) {
         adec_print("[%s]Create ffmpeg decode thread failed!\n",__FUNCTION__);
-        return ret;
+        return;
     }
     audec->sn_threadid=tid;
 	//pthread_setname_np(tid,"AmadecDecodeLP");

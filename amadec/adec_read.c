@@ -2,6 +2,7 @@
 #include <string.h>  // strcmp 
 #include <time.h>    // clock
 #include <fcntl.h>
+#include <unistd.h>
 
 #include <sys/mman.h>
 #include <audio-dec.h>

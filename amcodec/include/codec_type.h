@@ -104,7 +104,9 @@ typedef struct
     unsigned char height;
 	unsigned char type;    
 }subtitle_info_t;
-#define MAX_SUB_NUM			(32)
+#ifndef MAX_SUB_NUM
+#define MAX_SUB_NUM	32
+#endif
 
 #define IS_VALID_PID(t)     (t>=0 && t<=0x1fff)
 #define IS_VALID_STREAM(t)  (t>0 && t<=0x1fff)

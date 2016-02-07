@@ -21,11 +21,7 @@
 #else
 #define LOG_DEFAULT  0
 char *level;
-#define adec_print(f,s...) do{level=getenv("LOG_LEVEL"); \
-	                                   if(level&&atoi(level)>LOG_DEFAULT) \ 
-						   fprintf(stderr,f,##s);\
-						   else; }while(0);
+#define adec_print(f,s...) do{level=getenv("LOG_LEVEL"); if (level&&atoi(level)>LOG_DEFAULT) fprintf(stderr,f,##s); else; } while(0);
 #endif
-
 
 #endif

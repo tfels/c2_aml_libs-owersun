@@ -6,7 +6,6 @@
 #include <string.h>
 
 #define DEFAULT_BUFFER_SIZE 1024*1024
-#define MIN(a,b) (a>b)?b:a
 
 typedef struct buffer_stream_st{
     int buf_length;

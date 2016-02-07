@@ -18,6 +18,7 @@
  *************************************************************************************
  */ 
 #include <stdio.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -51,7 +52,7 @@ int pcmenc_init()
     ioctl(dev_fd, AUDIODSP_PCMENC_GET_RING_BUF_SIZE, &buffer_size); 
 /* mapping the kernel buffer to user space to acess */    
     map_buf= mmap(0,buffer_size, PROT_READ , MAP_PRIVATE, dev_fd, 0);
-    if((unsigned)map_buf == -1){
+    if((uintptr_t)map_buf == -1){
     	//printf("pcmenc:mmap failed,err id %d \n",errno);
     	adec_print("pcmenc:mmap failed,err id %d \n",errno);
     	close(dev_fd);
@@ -139,7 +140,7 @@ int pcmenc_deinit()
 {
 	pcm_read_num = 0;
 
-	if((unsigned)map_buf != 0xffffffff)
+	if((uintptr_t)map_buf != 0xffffffff)
 		munmap(map_buf,buffer_size);
 	if(dev_fd >= 0)
 		close(dev_fd);
