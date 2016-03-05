@@ -5,10 +5,18 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <log-print.h>
+#define __USE_GNU
 #include <pthread.h>
 #include "dts_enc.h"
 #include "dts_transenc_api.h"
 #include <cutils/properties.h>
+
+#include <Amsysfsutils.h>
+#include <amconfigutils.h>
+
+#include "adec-internal-mgt.h"
+#include "spdif_api.h"
+
 typedef enum {
     IDLE,
     TERMINATED,
@@ -187,9 +195,9 @@ static void *dts_enc_loop()
     pthread_exit(NULL);
     return 0;
  err:
- adec_print("====dts_enc thread exit success err\n");
+    adec_print("====dts_enc thread exit success err\n");
     pthread_exit(NULL);
-    return -1;
+    return 0;
 }
 
 

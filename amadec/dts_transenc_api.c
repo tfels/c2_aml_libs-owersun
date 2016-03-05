@@ -1,4 +1,4 @@
-
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
@@ -23,7 +23,7 @@ static int nNumFrmCoded;
 typedef struct  
 {
 	    int (*enc_init)(pcm51_encoded_info_t dts_transenc_info, unsigned int *input_size, unsigned int *output_size);
-	    int (*enc_encode)(pcm51_encoded_info_t dts_transenc_info, char *stream, unsigned char *output, unsigned int output_size);
+	    int (*enc_encode)(pcm51_encoded_info_t dts_transenc_info, char *stream, unsigned char *output, unsigned int *output_size);
 	    int (*enc_release)();  
 }ecoder_operations;
 
@@ -49,7 +49,7 @@ int dts_transenc_init()
 	rv = pcmenc_get_pcm_info(&dts_transenc_info);//xujian
     	if(dts_transenc_info.LFEFlag > 1)
 		dts_transenc_info.LFEFlag = 1;
-	int fd_dtsenc = dlopen("libdtsenc.so",RTLD_NOW);
+	int *fd_dtsenc = dlopen("libdtsenc.so",RTLD_NOW);
 	if (fd_dtsenc != 0)
 	{
 	       enc_ops.enc_init = dlsym(fd_dtsenc, "init");
@@ -84,7 +84,7 @@ err3:
 err4:
     pcmenc_deinit();//xujian
     iec958_deinit();//xujian
-    close(fd_dtsenc);
+    dlclose(fd_dtsenc);
     return -1;
 	    
 }

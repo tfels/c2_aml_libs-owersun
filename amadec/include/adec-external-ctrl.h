@@ -43,6 +43,10 @@ extern "C"
     int dummy_decode_set_mute(int en);
     int dummy_decode_set_volume(int vol);
     int dummy_decode_get_volume(int *vol);
+    int audio_decode_basic_init(void);
+    int audio_get_pcm_level(void* handle);
+    int audio_set_skip_bytes(void* handle, unsigned int bytes);
+    int audio_get_pts(void* handle);
 
 #ifdef  __cplusplus
 }

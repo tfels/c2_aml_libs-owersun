@@ -14,6 +14,8 @@
 
 #include <audio-dec.h>
 #include "audio_out/alsactl_parser.h"
+#include "alsa-out.h"
+#include "audiodsp-ctl.h"
 
 alsactl_setting_t playback_ctl;
 alsactl_setting_t mute_ctl;
@@ -277,7 +279,7 @@ int dummy_decode_get_volume(int *vol)
 {
      // printf("playback_ctl.ctlname=%s\n",playback_ctl.ctlname);
 	if(playback_ctl.is_parsed)
-	dummy_alsa_control(playback_ctl.ctlname, 0, 0, vol );
+	dummy_alsa_control(playback_ctl.ctlname, 0, 0, (long *)vol );
 	if(*vol < playback_ctl.minvalue)
 	    *vol = playback_ctl.minvalue;
 	else if(*vol > playback_ctl.maxvalue)

@@ -18,6 +18,7 @@ extern "C" {
     int am_getconfig_bool(const char * path);
     int am_getconfig_bool_def(const char * path,int def);
     float am_getconfig_float_def(const char * path,float defvalue);
+    int property_get(const char *key, char *value, const char *default_value);
 #ifdef  __cplusplus
 }
 #endif

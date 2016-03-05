@@ -12,12 +12,9 @@
 //#include <adec_omx_brige.h>
 #include <Amsysfsutils.h>
 #include <audio-dec.h>
-
-
-
-
-
-
+#include <amconfigutils.h>
+#include "adec_read.h"
+#include "audiodsp_update_format.h"
 
 extern int read_buffer(unsigned char *buffer,int size);
 void *audio_decode_loop(void *args);
@@ -44,7 +41,6 @@ audio_lib_t audio_lib_list[] =
     {ACODEC_FMT_COOK, "libcook.so"},
     {ACODEC_FMT_RAAC, "libraac.so"},
     {ACODEC_FMT_AMR, "libamr.so"},
-
     {ACODEC_FMT_PCM_S16BE,"libpcm.so"},
     {ACODEC_FMT_PCM_S16LE,"libpcm.so"},
     {ACODEC_FMT_PCM_U8,"libpcm.so"},
@@ -53,15 +49,14 @@ audio_lib_t audio_lib_list[] =
     {ACODEC_FMT_ALAW,"libpcm.so"},
     {ACODEC_FMT_MULAW,"libpcm.so"},
     {ACODEC_FMT_ADPCM,"libadpcm.so"},
-    NULL
-} ;
+};
 
 int find_audio_lib(aml_audio_dec_t *audec)
 {    
     int i;
     int num;
     audio_lib_t *f;
-    int fd = 0;
+    int *fd;
     adec_print("[%s %d]audec->format/%d audec->codec_id/0x%x\n",__FUNCTION__,__LINE__,audec->format,audec->codec_id);
     num = ARRAY_SIZE(audio_lib_list);   
     audio_decoder_operations_t *adec_ops=audec->adec_ops;
@@ -283,7 +278,7 @@ unsigned long  armdec_get_pcrscr(dsp_operations_t *dsp_ops)
     ioctl(dsp_ops->dsp_file_fd, AMSTREAM_IOC_PCRSCR, &val);
     return val;
 }
-unsigned long  armdec_set_pts(dsp_operations_t *dsp_ops,unsigned long apts)
+int  armdec_set_pts(dsp_operations_t *dsp_ops,unsigned long apts)
 {
     if (dsp_ops->dsp_file_fd < 0) {
         adec_print("armdec_set_apts err!\n");
@@ -544,9 +539,9 @@ static int audio_codec_init(aml_audio_dec_t *audec)
       audec->adsp_ops.dsp_on = 1;
       audec->adsp_ops.dsp_read = armdec_stream_read;
       audec->adsp_ops.get_cur_pts = armdec_get_pts;
-      audec->adsp_ops.get_cur_pcrscr =  armdec_get_pcrscr;
-      audec->adsp_ops.set_cur_apts    = armdec_set_pts;
-      audec->adsp_ops.dsp_read_raw=armdec_stream_read_raw;
+      audec->adsp_ops.get_cur_pcrscr = armdec_get_pcrscr;
+      audec->adsp_ops.set_cur_apts = armdec_set_pts;
+      audec->adsp_ops.dsp_read_raw = armdec_stream_read_raw;
       audec->pcm_bytes_readed=0;
       audec->raw_bytes_readed=0;
       audec->raw_frame_size=0;
@@ -815,7 +810,7 @@ static void start_decode_thread(aml_audio_dec_t *audec)
     pthread_t    tid;
     int ret = pthread_create(&tid, NULL, (void *)audio_getpackage_loop, (void *)audec);
     audec->sn_getpackage_threadid=tid;
-    adec_print("[%s]Create get package thread success! tid = %d\n",__FUNCTION__,tid);
+    adec_print("[%s]Create get package thread success! tid = %zd\n",__FUNCTION__,tid);
 
     ret = pthread_create(&tid, NULL, (void *)audio_decode_loop, (void *)audec);
     if (ret != 0) {
@@ -824,7 +819,7 @@ static void start_decode_thread(aml_audio_dec_t *audec)
     }
     audec->sn_threadid=tid;
 	//pthread_setname_np(tid,"AmadecDecodeLP");
-    adec_print("[%s]Create ffmpeg decode thread success! tid = %d\n",__FUNCTION__,tid);  
+    adec_print("[%s]Create ffmpeg decode thread success! tid = %zd\n",__FUNCTION__,tid);  
 }
 static void stop_decode_thread(aml_audio_dec_t *audec)
 {

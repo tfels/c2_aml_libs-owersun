@@ -23,6 +23,11 @@
 #include <log-print.h>
 #include <cutils/properties.h>
 
+#include <Amsysfsutils.h>
+#include <amconfigutils.h>
+
+#include "include/adec-external-ctrl.h"
+
 static int reset_track_enable=0;
 void adec_reset_track_enable(int enable_flag)
 {

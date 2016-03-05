@@ -107,7 +107,7 @@ struct dsp_operations {
     unsigned long(*get_cur_pts)(dsp_operations_t *);
     unsigned long(*get_cur_pcrscr)(dsp_operations_t *);
     int (*set_cur_apts)(dsp_operations_t *dsp_ops,unsigned long apts);
-	int amstream_fd;
+    int amstream_fd;
     void *audec;
 };
 

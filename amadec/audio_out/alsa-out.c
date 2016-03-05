@@ -23,6 +23,8 @@
 #include <alsa-out.h>
 #include "alsactl_parser.h"
 
+#include <amconfigutils.h>
+
 #define   PERIOD_SIZE  1024
 #define   PERIOD_NUM    4
 #define USE_INTERPOLATION
@@ -212,7 +214,7 @@ static int set_params(alsa_param_t *alsa_params)
         adec_print("Unable to get buffersize \n");
         return err;
     }
-	printf("alsa buffer frame size %d \n",bufsize);
+	printf("alsa buffer frame size %zd \n",bufsize);
     alsa_params->buffer_size = bufsize * alsa_params->bits_per_frame / 8;
 
 #if 1
@@ -630,7 +632,7 @@ int alsa_init(struct aml_audio_dec* audec)
         snd_pcm_close(alsa_param->handle);
         return -1;
     }
-    adec_print("Create alsa playback loop thread success ! tid = %d\n", tid);
+    adec_print("Create alsa playback loop thread success ! tid = %zd\n", tid);
 
     alsa_param->playback_tid = tid;
 

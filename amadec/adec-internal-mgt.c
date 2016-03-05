@@ -21,6 +21,10 @@
 #include <cutils/properties.h>
 #include <dts_enc.h>
 #include <Amsysfsutils.h>
+#include <amconfigutils.h>
+#include "audiodsp_update_format.h"
+#include "alsa-out.h"
+#include "adec-ffmpeg-mgt.h"
 
 static int set_tsync_enable(int enable)
 {
@@ -132,7 +136,7 @@ static void start_adec(aml_audio_dec_t *audec)
 				amsysfs_get_sysfs_str(TSYNC_VPTS, buf, sizeof(buf));
 				if (sscanf(buf, "0x%lx", &vpts) < 1) {
 					adec_print("unable to get vpts from: %s", buf);
-					return -1;
+					return;
 				}
 
 				// save vpts to apts
@@ -671,7 +675,7 @@ int audiodec_init(aml_audio_dec_t *audec)
         adec_print("Create adec main thread failed!\n");
         return ret;
     }
-    adec_print("Create adec main thread success! tid = %d\n", tid);
+    adec_print("Create adec main thread success! tid = %zd\n", tid);
     audec->thread_pid = tid;
     return ret;
 }

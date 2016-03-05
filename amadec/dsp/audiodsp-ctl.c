@@ -23,6 +23,8 @@
 #include <log-print.h>
 #include <cutils/properties.h>
 
+#include <amconfigutils.h>
+
 firmware_s_t firmware_list[] = {
     {0, MCODEC_FMT_MPEG123, "audiodsp_codec_mad.bin"},
     {1, MCODEC_FMT_AAC, "audiodsp_codec_aac_helix.bin"},
@@ -200,7 +202,7 @@ int audiodsp_init(dsp_operations_t *dsp_ops)
  * \param dsp_ops pointer to dsp operation struct
  * \return 0 on success otherwise negative code error
  */
- static err_count = 0;
+ static int err_count = 0;
 
 #define PARSER_WAIT_MAX 100
 int audiodsp_start(aml_audio_dec_t *audec)

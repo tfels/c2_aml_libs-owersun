@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -13,17 +11,19 @@
 #include <log-print.h>
 #include "aml_resample.h"
 
+#include <Amsysfsutils.h>
+#include <amconfigutils.h>
 
 af_resampe_ctl_t af_resampler_ctx={0};
 
 static int get_sysfs_int(const char *path)
 {
-    int fd;
+    int fd, ret;
     int val = 0;
-    char  bcmd[8]={0};;
+    char bcmd[8]={0};
     fd = open(path, O_RDONLY);
     if (fd >= 0) {
-        read(fd, bcmd, 16);
+        ret = read(fd, bcmd, 8);
         if (bcmd[0]=='O' && bcmd[1]=='N')    val=1;
             
         else if(bcmd[0]=='O'&& bcmd[1]=='F') val=0;
@@ -356,7 +356,7 @@ static void dump_pcm_bin(char *path,char *buf,int size)
 void af_resample_api(char* buffer, unsigned int * size, int Chnum, aml_audio_dec_t* audec, int enable, int delta)
 {
   short data_in[128*2];
-  short *pbuf;
+  char *pbuf;
   int resample_enable;
   int resample_type;
   int resample_delta;
@@ -366,7 +366,7 @@ void af_resample_api(char* buffer, unsigned int * size, int Chnum, aml_audio_dec
   int request = *size;
   int dsp_read = 0;
   static int last_resample_enable = 0;
-  pbuf = (short*)date_temp;
+  pbuf = (char *)date_temp;
   
   //resample_enable = 1;//af_get_resample_enable_flag();
   resample_enable = enable;

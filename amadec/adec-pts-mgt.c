@@ -19,6 +19,8 @@
 #include <cutils/properties.h>
 #include <sys/time.h>
 
+#include <Amsysfsutils.h>
+#include <amconfigutils.h>
 
 int adec_pts_droppcm(aml_audio_dec_t *audec);
 int vdec_pts_resume(void);
@@ -167,7 +169,7 @@ int adec_pts_droppcm(aml_audio_dec_t *audec)
     
     apts = adec_calc_pts(audec);
     int diff = (apts > vpts)?(apts-vpts):(vpts-apts);
-    adec_print("before drop --apts 0x%x,vpts 0x%x,apts %s, diff 0x%x\n",apts,vpts,(apts>vpts)?"big":"small",diff);
+    adec_print("before drop --apts 0x%lx,vpts 0x%lx,apts %s, diff 0x%x\n",apts,vpts,(apts>vpts)?"big":"small",diff);
     if(apts>=vpts) //no need to drop pcm
         return 0;
     int audio_ahead = 0;
@@ -225,9 +227,9 @@ int adec_pts_droppcm(aml_audio_dec_t *audec)
     //new time 
     gettimeofday(&new_time, NULL);
     new_time_mseconds = (new_time.tv_usec / 1000 + new_time.tv_sec * 1000);
-    adec_print("==old time  sec :%d usec:%d \n", old_time.tv_sec  ,old_time.tv_usec );
-    adec_print("==new time  sec:%d usec:%d \n", new_time.tv_sec  ,new_time.tv_usec  ); 
-    adec_print("==old time ms is :%d  new time ms is:%d   diff:%d  \n",old_time_mseconds ,new_time_mseconds ,new_time_mseconds- old_time_mseconds);
+    adec_print("==old time  sec :%zd usec:%zd \n", old_time.tv_sec  ,old_time.tv_usec );
+    adec_print("==new time  sec:%zd usec:%zd \n", new_time.tv_sec  ,new_time.tv_usec  ); 
+    adec_print("==old time ms is :%ld  new time ms is:%ld   diff:%ld  \n",old_time_mseconds ,new_time_mseconds ,new_time_mseconds- old_time_mseconds);
 
     if (amsysfs_get_sysfs_str(TSYNC_VPTS, buf, sizeof(buf)) == -1) {
     	adec_print("unable to open file %s,err: %s", TSYNC_APTS, strerror(errno));
@@ -240,7 +242,7 @@ int adec_pts_droppcm(aml_audio_dec_t *audec)
 
     apts = adec_calc_pts(audec);
     diff = (apts > vpts)?(apts-vpts):(vpts-apts);
-    adec_print("after drop pcm:--apts 0x%x,vpts 0x%x,apts %s, diff 0x%x\n",apts,vpts,(apts>vpts)?"big":"small",diff);
+    adec_print("after drop pcm:--apts 0x%lx,vpts 0x%lx,apts %s, diff 0x%x\n",apts,vpts,(apts>vpts)?"big":"small",diff);
     return 0;
 }
 

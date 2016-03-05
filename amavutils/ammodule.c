@@ -55,7 +55,7 @@ static const int PATH_COUNT =
  * @return 0 = success, !0 = failure.
  */
 static int amload(const char *path,
-                  const struct ammodule_t **pHmi)
+                  struct ammodule_t **pHmi)
 {
     int status;
     void *handle;
@@ -112,7 +112,7 @@ done:
     return status;
 }
 
-int ammodule_load_module(const char *modulename, const struct ammodule_t **module)
+int ammodule_load_module(const char *modulename, struct ammodule_t **module)
 {
     int status = -ENOENT;;
     int i;

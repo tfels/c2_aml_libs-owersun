@@ -23,6 +23,9 @@
 #include <codec.h>
 #include <audio_priv.h>
 #include "codec_h_ctrl.h"
+#include "codec_msg.h"
+#include <codec.h>
+#include <audio_ctrl.h>
 #include <adec-external-ctrl.h>
 
 #define SUBTITLE_EVENT
@@ -279,7 +282,7 @@ static inline int codec_video_es_init(codec_para_t *pcodec)
 
     flags |= pcodec->noblock ? O_NONBLOCK : 0;
     if(pcodec->video_type == VFORMAT_HEVC) {
-		printf("OPEN es hevc\n");
+		CODEC_PRINT("OPEN es hevc\n");
       handle = codec_h_open(CODEC_VIDEO_ES_HEVC_DEVICE, flags);
     }
     else {
@@ -2116,7 +2119,7 @@ int codec_get_audio_resample_ena(codec_para_t *pcodec)
 {
     unsigned long audio_resample_ena;
     int ret;
-    ret = codec_h_control(pcodec->audio_utils_handle, AMAUDIO_IOC_GET_RESAMPLE_ENA, &audio_resample_ena);
+    ret = codec_h_control(pcodec->audio_utils_handle, AMAUDIO_IOC_GET_RESAMPLE_ENA, (unsigned long)&audio_resample_ena);
     if (ret < 0) {
         return system_error_to_codec_error(ret);
     } else {
@@ -2162,7 +2165,7 @@ int codec_set_video_delay_limited_ms(codec_para_t *pcodec,int delay_ms)
 /* --------------------------------------------------------------------------*/
 int codec_get_video_delay_limited_ms(codec_para_t *pcodec,int *delay_ms)
 {
-    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_VIDEO_DELAY_LIMIT_MS, delay_ms);
+    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_VIDEO_DELAY_LIMIT_MS, (unsigned long)delay_ms);
 }
 
 
@@ -2191,7 +2194,7 @@ int codec_set_audio_delay_limited_ms(codec_para_t *pcodec,int delay_ms)
 /* --------------------------------------------------------------------------*/
 int codec_get_audio_delay_limited_ms(codec_para_t *pcodec,int *delay_ms)
 {
-    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_AUDIO_DELAY_LIMIT_MS, delay_ms);
+    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_AUDIO_DELAY_LIMIT_MS, (unsigned long)delay_ms);
 }
 
 /* --------------------------------------------------------------------------*/
@@ -2205,7 +2208,7 @@ int codec_get_audio_delay_limited_ms(codec_para_t *pcodec,int *delay_ms)
 /* --------------------------------------------------------------------------*/
 int codec_get_audio_cur_delay_ms(codec_para_t *pcodec,int *delay_ms)
 {
-    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_AUDIO_CUR_DELAY_MS, delay_ms);
+    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_AUDIO_CUR_DELAY_MS, (unsigned long)delay_ms);
 }
 
 
@@ -2220,7 +2223,7 @@ int codec_get_audio_cur_delay_ms(codec_para_t *pcodec,int *delay_ms)
 /* --------------------------------------------------------------------------*/
 int codec_get_video_cur_delay_ms(codec_para_t *pcodec,int *delay_ms)
 {
-    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_VIDEO_CUR_DELAY_MS, delay_ms);
+    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_VIDEO_CUR_DELAY_MS, (unsigned long)delay_ms);
 }
 
 /* --------------------------------------------------------------------------*/
@@ -2234,7 +2237,7 @@ int codec_get_video_cur_delay_ms(codec_para_t *pcodec,int *delay_ms)
 /* --------------------------------------------------------------------------*/
 int codec_get_video_cur_bitrate(codec_para_t *pcodec,int *bitrate)
 {
-    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_VIDEO_AVG_BITRATE_BPS, bitrate);
+    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_VIDEO_AVG_BITRATE_BPS, (unsigned long)bitrate);
 }
 
 
@@ -2249,7 +2252,7 @@ int codec_get_video_cur_bitrate(codec_para_t *pcodec,int *bitrate)
 /* --------------------------------------------------------------------------*/
 int codec_get_audio_cur_bitrate(codec_para_t *pcodec,int *bitrate)
 {
-    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_AUDIO_AVG_BITRATE_BPS, bitrate);
+    return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_AUDIO_AVG_BITRATE_BPS, (unsigned long)bitrate);
 }
 
 /* --------------------------------------------------------------------------*/
@@ -2277,12 +2280,12 @@ int codec_set_drmmode(codec_para_t *pcodec)
  */
 int codec_get_last_checkout_apts(codec_para_t* pcodec, unsigned long *apts)
 {
-  return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_LAST_CHECKOUT_APTS, apts);
+  return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_LAST_CHECKOUT_APTS, (unsigned long)apts);
 }
 
 int codec_get_last_checkin_apts(codec_para_t* pcodec, unsigned long* apts)
 {
-  return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_LAST_CHECKIN_APTS, apts);
+  return codec_h_control(pcodec->handle, AMSTREAM_IOC_GET_LAST_CHECKIN_APTS, (unsigned long)apts);
 }
 
 /**
@@ -2300,12 +2303,12 @@ int codec_get_pcm_level(codec_para_t* pcodec, unsigned int* level)
 
 int codec_set_skip_bytes(codec_para_t* pcodec, unsigned int bytes)
 {
-  return audio_set_skip_bytes(pcodec->adec_priv);
+  return audio_set_skip_bytes(pcodec->adec_priv, bytes);
 }
 
-int codec_get_dsp_apts(codec_para_t* pcodec, unsigned int * apts)
+void codec_get_dsp_apts(codec_para_t* pcodec, unsigned int * apts)
 {
-  return audio_get_pts(pcodec->adec_priv, apts);
+    *apts = audio_get_pts(pcodec->adec_priv);
 }
 /*add for gstreamer fast/slow forward*/
 int codec_set_video_playrate(codec_para_t* pcodec, int rate)

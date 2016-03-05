@@ -41,7 +41,7 @@ int pcmenc_init()
 {
 	buffer_size = 0;
 	read_offset = 0;
-	map_buf = 0xffffffff;
+	map_buf = MAP_FAILED;
 	dev_fd = -1;
     dev_fd = open(AUDIODSP_PCMENC_DEV_NAME, O_RDONLY);
     if(dev_fd < 0){
@@ -52,7 +52,7 @@ int pcmenc_init()
     ioctl(dev_fd, AUDIODSP_PCMENC_GET_RING_BUF_SIZE, &buffer_size); 
 /* mapping the kernel buffer to user space to acess */    
     map_buf= mmap(0,buffer_size, PROT_READ , MAP_PRIVATE, dev_fd, 0);
-    if((uintptr_t)map_buf == -1){
+    if(map_buf == MAP_FAILED){
     	//printf("pcmenc:mmap failed,err id %d \n",errno);
     	adec_print("pcmenc:mmap failed,err id %d \n",errno);
     	close(dev_fd);
@@ -140,7 +140,7 @@ int pcmenc_deinit()
 {
 	pcm_read_num = 0;
 
-	if((uintptr_t)map_buf != 0xffffffff)
+	if(map_buf != MAP_FAILED)
 		munmap(map_buf,buffer_size);
 	if(dev_fd >= 0)
 		close(dev_fd);

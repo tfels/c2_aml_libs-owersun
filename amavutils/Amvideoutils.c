@@ -13,6 +13,8 @@
 #include "include/Amvideoutils.h"
 #include "include/Amsysfsutils.h"
 #include "include/Amdisplayutils.h"
+#include "include/amdisplayutils.h"
+#include "include/amconfigutils.h"
 
 #include "amports/amstream.h"
 #include "ppmgr/ppmgr.h"
@@ -322,13 +324,14 @@ int amvideo_convert_axis(int32_t* x, int32_t* y, int32_t* w, int32_t* h, int *ro
 void get_axis(const char *path, int *x, int *y, int *w, int *h)
 {
     int fd = -1;
+    int ret;
     char buf[SYSCMD_BUFSIZE];
 
     fd = open(path, O_RDONLY);
     if (fd < 0)
         return;
 
-    read(fd, buf, SYSCMD_BUFSIZE);
+    ret = read(fd, buf, SYSCMD_BUFSIZE);
     if (sscanf(buf, "%d %d %d %d", x, y, w, h) == 4) {
         LOGI("%s axis: %d %d %d %d\n", path, *x, *y, *w, *h);
     }
@@ -372,6 +375,7 @@ int amvideo_utils_set_virtual_position(int32_t x, int32_t y, int32_t w, int32_t 
     int video_on_vpp2 = is_video_on_vpp2();
     int vertical_panel = is_vertical_panel();
     int vertical_panel_reverse = is_vertical_panel_reverse();
+    int tmp;
     
     if (video_on_vpp2) {
         int fb0_w, fb0_h, fb2_w, fb2_h;
@@ -429,7 +433,7 @@ int amvideo_utils_set_virtual_position(int32_t x, int32_t y, int32_t w, int32_t 
         goto OUT;
     }
 
-    read(dev_fd, buf, SYSCMD_BUFSIZE);
+    tmp = read(dev_fd, buf, SYSCMD_BUFSIZE);
 
     if (sscanf(buf, "%dx%d", &dev_w, &dev_h) == 2) {
         LOGI("device resolution %dx%d\n", dev_w, dev_h);
@@ -809,10 +813,11 @@ int amvideo_utils_get_hdmi_authenticate(void)
     LOG_FUNCTION_NAME    
     int fd = -1;
     int val = -1;
+    int ret;
     char  bcmd[16];
     fd = open(HDMI_AUTHENTICATE_PATH, O_RDONLY);
     if (fd >= 0) {
-        read(fd, bcmd, sizeof(bcmd));
+        ret = read(fd, bcmd, sizeof(bcmd));
         val = strtol(bcmd, NULL, 10);
         close(fd);
     }

@@ -1,6 +1,8 @@
 #ifndef ALSA_OUT_H
 #define ALSA_OUT_H
 
+#include <alsa/asoundlib.h>
+
 #define PCM_DEVICE_DEFAULT      "default"
 #define OUTPUT_BUFFER_SIZE      (8*1024)
 
@@ -23,4 +25,5 @@ typedef struct {
     int wait_flag;
 } alsa_param_t;
 int dummy_alsa_control(char * id_string , long vol, int rw, long * value);
+void get_output_func(struct aml_audio_dec* audec);
 #endif

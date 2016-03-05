@@ -11,8 +11,9 @@
 */
 #ifndef CODEC_PRIV_H_
 #define CODEC_PRIV_H_
-void audio_start(void **priv, codec_para_t *pcodec);
+void audio_start(void **priv, arm_audio_info *a_ainfo);
 void audio_stop(void **priv);
 void audio_pause(void *priv);
 void audio_resume(void *priv);
+int audio_set_avsync_threshold(void *priv, int threshold);
 #endif

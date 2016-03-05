@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>  // strcmp 
 #include <time.h>    // clock
 #include <fcntl.h>
@@ -8,8 +9,7 @@
 #include <audio-dec.h>
 #include <adec-pts-mgt.h>
 
-
-
+#include <Amsysfsutils.h>
 
 #define ASTREAM_DEV "/dev/uio0"
 #define ASTREAM_ADDR "/sys/class/astream/astream-dev/uio0/maps/map0/addr"
@@ -52,7 +52,7 @@ int uio_init(aml_audio_dec_t *audec){
 	int phys_start;
 	int phys_size;
 	int phys_offset;
-	volatile unsigned memmap;	
+	volatile unsigned *memmap;	
 
 
 	audec->fd_uio = open(ASTREAM_DEV, O_RDWR);
@@ -69,7 +69,7 @@ int uio_init(aml_audio_dec_t *audec){
 	phys_size = (phys_size + pagesize -1) & (~ (pagesize-1));
 	memmap = mmap(NULL, phys_size, PROT_READ|PROT_WRITE, MAP_SHARED, audec->fd_uio, 0* pagesize);
 	
-	adec_print("memmap = %x , pagesize = %x\n", memmap,pagesize);
+	adec_print("memmap = 0x%zx , pagesize = %x\n", (uintptr_t)memmap,pagesize);
 	if(memmap == MAP_FAILED){
 		adec_print("map /dev/uio0 failed\n");
 		return -1;

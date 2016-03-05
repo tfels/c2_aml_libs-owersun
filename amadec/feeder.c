@@ -16,6 +16,9 @@
 #include <feeder.h>
 #include <audiodsp.h>
 
+#include <Amsysfsutils.h>
+#include "include/audiodsp-ctl.h"
+
 /**
  * \brief get audio format
  * \return audio format on success otherwise ADEC_AUDIO_FORMAT_UNKNOWN

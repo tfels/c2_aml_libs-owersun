@@ -10,7 +10,7 @@
 #include <cutils/log.h>
 #include <sys/ioctl.h>
 #include "include/Amdisplayutils.h"
-
+#include "include/Amsysfsutils.h"
 
 #define FB_DEVICE_PATH   "/sys/class/graphics/fb0/virtual_size"
 #define SCALE_AXIS_PATH  "/sys/class/graphics/fb0/scale_axis"
@@ -32,7 +32,7 @@
 
 void get_display_mode(char *mode)
 {
-    int fd;
+    int fd, ret;
     char *path = "/sys/class/display/mode";
     if (!mode) {
         LOGE("[get_display_mode]Invalide parameter!");
@@ -41,8 +41,8 @@ void get_display_mode(char *mode)
     fd = open(path, O_RDONLY);
     if (fd >= 0) {
         memset(mode, 0, 16); // clean buffer and read 15 byte to avoid strlen > 15	
-        read(fd, mode, 15);
-        LOGI("[get_display_mode]mode=%s strlen=%d\n", mode, strlen(mode));
+        ret = read(fd, mode, 15);
+        LOGI("[get_display_mode]mode=%s strlen=%zd\n", mode, strlen(mode));
         mode[strlen(mode)] = '\0';
         close(fd);
     } else {
@@ -105,7 +105,7 @@ int amdisplay_utils_set_scale_mode(int scale_wx, int scale_hx)
 
     /*scale mode only support x2,x1*/
     if ((scale_wx != 1 && scale_wx != 2) || (scale_hx != 1 && scale_hx != 2)) {
-        LOGI("unsupport scaling mode,x1,x2 only\n", scale_wx, scale_hx);
+        LOGI("unsupport scaling mode,x1,x2 only\n");
         return -1;
     }
     
