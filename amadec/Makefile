@@ -34,8 +34,8 @@ $(TARGET): $(TARGET_OBJS)
 
 install:
 	install -m 0644 libamadec.so $(DESTDIR)/usr/lib/aml_libs
-	install -m 0644 include/*.h $(DESTDIR)/usr/include
-	install -m 0644 *.h $(DESTDIR)/usr/include
+	#install -m 0644 include/*.h $(DESTDIR)/usr/include
+	#install -m 0644 *.h $(DESTDIR)/usr/include
 
 force:
 

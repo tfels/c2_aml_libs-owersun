@@ -63,7 +63,7 @@ install:
 	
 	install -m 0644 include -d $(DESTDIR)/usr/include/amcodec
 	install -m 0644 include/*.h $(DESTDIR)/usr/include/amcodec
-	install -m 0644 include/*.h $(DESTDIR)/usr/include
+	#install -m 0644 include/*.h $(DESTDIR)/usr/include
 	
 	install -m 0644 include/amports -d $(DESTDIR)/usr/include/amports
 	install -m 0644 include/amports/*.h $(DESTDIR)/usr/include/amports

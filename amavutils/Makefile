@@ -32,8 +32,8 @@ $(TARGET): $(TARGET_OBJS)
 
 install:
 	install -m 0644 ${TARGET} $(DESTDIR)/usr/lib/aml_libs
-	install -m 0644 include/*.h $(DESTDIR)/usr/include
-	install -m 0644 include/cutils -d $(DESTDIR)/usr/include/cutils
+	#install -m 0644 include/*.h $(DESTDIR)/usr/include
+	#install -m 0644 include/cutils -d $(DESTDIR)/usr/include/cutils
 
 force:
 
